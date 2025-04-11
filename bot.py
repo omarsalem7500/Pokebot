@@ -3,6 +3,7 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 import requests
+from evolutions import get_evolution_chain
 
 
 load_dotenv()
@@ -46,6 +47,23 @@ async def pokemon_stats(ctx, *, pokemon_name: str):
     )
 
 
+
+
+
     await ctx.send(stats_message)
+
+
+
+@bot.command(name='evolution')
+async def evolution_command(ctx, *, pokemon_name: str):
+    chains, error = get_evolution_chain(pokemon_name)
+
+    if error:
+        await ctx.send(error)
+        return
+
+    formatted = "\n".join(" → ".join(step) for step in chains)
+    await ctx.send(f"**Evolution lines for {pokemon_name.title()}:**\n{formatted}")
+
 
 bot.run(TOKEN)
