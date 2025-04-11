@@ -7,6 +7,7 @@ from evolutions import get_evolution_chain
 from moves import get_moveset
 from encounters import get_encounter_locations
 from abilities import get_abilities
+from typeinfo import get_type_effectiveness
 
 
 
@@ -147,6 +148,64 @@ async def abilities_command(ctx, *, pokemon_name: str):
             message += f"- **{ability['name']}**: {ability['description']}\n"
 
     await ctx.send(message[:2000])  # Just in case it's long
+
+
+@bot.command(name='types')
+async def types_command(ctx, *, pokemon_name: str):
+    info, error = get_type_effectiveness(pokemon_name)
+
+    if error:
+        await ctx.send(error)
+        return
+
+    msg = f"**{pokemon_name.title()}** is {info['types']}\n\n"
+
+    if info['weaknesses']:
+        msg += f"❌ **Weak to:** {', '.join(info['weaknesses'])}\n"
+    if info['resistances']:
+        msg += f"✅ **Resistant to:** {', '.join(info['resistances'])}\n"
+    if info['immunities']:
+        msg += f"🛡️ **Immune to:** {', '.join(info['immunities'])}\n"
+
+    await ctx.send(msg)
+
+
+@bot.command(name='sprite')
+async def sprite_command(ctx, *, pokemon_name: str):
+    res = requests.get(f"https://pokeapi.co/api/v2/pokemon/{pokemon_name.lower()}")
+    if res.status_code != 200:
+        await ctx.send(f"Could not find Pokémon: `{pokemon_name}`")
+        return
+
+    data = res.json()
+
+    name = data['name'].title()
+    types = [t['type']['name'].title() for t in data['types']]
+    type_str = ' / '.join(types)
+
+    # Sprites
+    front_default = data['sprites']['front_default']
+    front_shiny = data['sprites']['front_shiny']
+    artwork = data['sprites']['other']['official-artwork']['front_default']
+
+    embed = discord.Embed(
+        title=f"{name}",
+        description=f"Type: {type_str}",
+        color=discord.Color.gold()
+    )
+
+    if artwork:
+        embed.set_thumbnail(url=artwork)
+
+    if front_default and front_shiny:
+        embed.add_field(name="🧍 Regular", value="[Sprite Link]({})".format(front_default), inline=True)
+        embed.add_field(name="✨ Shiny", value="[Sprite Link]({})".format(front_shiny), inline=True)
+        embed.set_image(url=front_shiny)  # Highlight shiny version
+    elif front_default:
+        embed.set_image(url=front_default)
+
+    await ctx.send(embed=embed)
+
 
 
 
