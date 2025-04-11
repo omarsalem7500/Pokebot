@@ -19,7 +19,7 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 async def on_ready():
     print(f'{bot.user.name} is now connected to Discord!')
 
-@bot.command(name='pokemon')
+@bot.command(name='stats')
 
 async def pokemon_stats(ctx, *, pokemon_name: str):
     pokemon_name = pokemon_name.lower()
