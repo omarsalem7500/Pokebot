@@ -208,6 +208,22 @@ async def sprite_command(ctx, *, pokemon_name: str):
 
 
 
+@bot.command(name="rules")
+async def rules_command(ctx):
+    help_message = (
+        "**Available Pokébot Commands:**\n\n"
+        "`!stats <pokemon>` → Show base stats and total\n"
+        "`!evolution <pokemon>` → Show evolution chain + method\n"
+        "`!moveset <pokemon>` → List moves learned by level\n"
+        "`!encounters <pokemon>` → Where it can be found (wild)\n"
+        "`!abilities <pokemon>` → Shows abilities + what they do\n"
+        "`!types <pokemon>` → Type effectiveness chart\n"
+        "`!sprite <pokemon>` → Show front sprite, shiny, and art\n"
+    )
+    await ctx.send(help_message)
+
+
+
 
 
 
