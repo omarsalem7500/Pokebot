@@ -1,6 +1,6 @@
 # Pokébot 🎮
 
-A feature-rich Discord bot powered by the [PokéAPI](https://pokeapi.co) that brings real-time Pokémon data directly into your server! Built with `discord.py`.
+A feature-rich Discord bot powered by the [PokéAPI](https://pokeapi.co) that brings real-time Pokémon data directly into your server! Built with `discord.py`. Runs on EC2
 
 ---
 
